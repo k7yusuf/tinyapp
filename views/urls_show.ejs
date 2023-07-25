@@ -15,15 +15,7 @@
     <header>
       <nav class="navbar navbar-expand-md navbar-dark bg-success">
         <a class="navbar-brand" href="/urls">TinyApp</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -34,15 +26,30 @@
         </div>
       </nav>
     </header>
-    <div class="card text-center">
-      <div class="card-header"></div>
-      <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %></h5>
-        <p class="card-text">
-          Short URL ID: <a href="/u/<%= shortURL %>"><%= shortURL %></a>
-        </p>
+  
+    <div class="container mt-4">
+      <% if (user && url && url.userID === user.id) { %>
+      <h2>Edit URL</h2>
+      <form action="/urls/<%= shortURL %>/edit" method="POST">
+        <div class="form-group">
+          <label for="longURL">Long URL:</label>
+          <input type="text" class="form-control" id="longURL" name="longURL" value="<%= longURL %>" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <!-- Add the Update button -->
+        <button type="button" class="btn btn-secondary" onclick="updateURL()">Update</button>
+      </form>
+      <div class="card text-center mt-4">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <h5 class="card-title">TinyURL for: <%= longURL %></h5>
+          <p class="card-text">
+            Short URL ID: <a href="/u/<%= shortURL %>"><%= shortURL %></a>
+          </p>
+          <p>Long URL: <%= longURL %></p> 
+        </div>
+        <div class="card-footer text-muted"></div>
       </div>
-      <div class="card-footer text-muted"></div>
     </div>
     <!-- Bootstrap JS -->
     <script
@@ -60,5 +67,30 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script>
+      function updateURL() {
+        const longURL = document.getElementById("longURL").value;
+        const shortURL = "<%= shortURL %>";
+        
+        // Make an AJAX POST request to update the long URL
+        fetch(`/urls/${shortURL}/edit`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ longURL }),
+        })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          // Refresh the page to reflect the updated data
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error("Error updating URL:", error);
+        });
+      }
+    </script>
   </body>
 </html>

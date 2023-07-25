@@ -132,6 +132,49 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+// express_server.js
+// ...
+
+// Display the form for editing the long URL
+app.get("/urls/:id/edit", (req, res) => {
+  const userId = req.session.user_id;
+  const user = users[userId];
+  const shortURL = req.params.id;
+  const url = urlDatabase[shortURL];
+
+  if (!user) {
+    return res.redirect("/login");
+  }
+
+  if (!url || url.userID !== userId) {
+    return res.status(404).send("<h1>URL Not Found or Access Denied</h1>");
+  }
+
+  const templateVars = { shortURL, longURL: url.longURL, user };
+  res.render("urls_show", templateVars);
+});
+
+// Handle the form submission to edit the long URL
+app.post("/urls/:id/edit", (req, res) => {
+  const userId = req.session.user_id;
+  const user = users[userId];
+  const shortURL = req.params.id;
+  const url = urlDatabase[shortURL];
+
+  if (!user) {
+    return res.redirect("/login");
+  }
+
+  if (!url || url.userID !== userId) {
+    return res.status(404).send("<h1>URL Not Found or Access Denied</h1>");
+  }
+
+  // Update the long URL with the value from the form submission
+  url.longURL = req.body.longURL;
+
+  res.redirect("/urls");
+});
+
 // Display the registration page
 app.get("/register", (req, res) => {
   const userId = req.session.user_id;
@@ -151,7 +194,7 @@ app.post("/register", (req, res) => {
     return;
   }
 
-  const existingUser = helpers.getUserByEmail(email, users);
+  const existingUser = getUserByEmail(email, users);
   if (existingUser) {
     res.status(400).send("Email already registered");
     return;
@@ -180,7 +223,7 @@ app.post("/urls", (req, res) => {
 app.post("/login", (req, res) => {
 
   const { email, password } = req.body;
-  const user = helpers.getUserByEmail(email, users);
+  const user = getUserByEmail(email, users);
   if (!user) {
     res.status(403).send("User not found");
     return;
