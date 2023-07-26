@@ -65,10 +65,15 @@ app.post("/urls", (req, res) => {
   }
   const longURL = req.body.longURL;
   const shortURL = generateRandomString();
+
+  console.log("New URL:", longURL, "Shortened URL:", shortURL);
+
   urlDatabase[shortURL] = {
     longURL: longURL,
     userID: userId,
   };
+  console.log("URL Database:", urlDatabase); // Log the updated database
+  
   res.redirect("/urls");
 });
 
