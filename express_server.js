@@ -30,13 +30,6 @@ app.get("/", (req, res) => {
   }
 });
 
-// app.get("/", (req, res) => {
-//   res.send("Hello!");
-// 
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
-
 // Display the URLs page for the logged-in user
 app.get("/urls", (req, res) => {
   const userId = req.session.user_id;
@@ -64,8 +57,12 @@ app.post("/urls", (req, res) => {
     return res.status(401).send("You need to be logged in to shorten URLs.");
   }
   const longURL = req.body.longURL;
-  const shortURL = generateRandomString();
+  
+  // Add this line to check the user and long URL values
+  console.log("User:", user, "Long URL:", longURL);
 
+  const shortURL = generateRandomString();
+  
   console.log("New URL:", longURL, "Shortened URL:", shortURL);
 
   urlDatabase[shortURL] = {
@@ -73,7 +70,7 @@ app.post("/urls", (req, res) => {
     userID: userId,
   };
   console.log("URL Database:", urlDatabase); // Log the updated database
-  
+
   res.redirect("/urls");
 });
 
