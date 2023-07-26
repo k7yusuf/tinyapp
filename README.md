@@ -10,10 +10,15 @@ View and manage URLs
 Setup
 
 Clone the repository: git clone https://github.com/k7yusuf/tinyapp.git
+
 Navigate to the project directory: cd tinyapp
+
 Install dependencies using the npm install command: npm install
+
 Run the development web server: node express_server.js
+
 Start the application: npm start
+
 Access the application in your web browser at: http://localhost:8080/urls
 
 Dependencies
