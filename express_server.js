@@ -132,9 +132,6 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-// express_server.js
-// ...
-
 // Display the form for editing the long URL
 app.get("/urls/:id/edit", (req, res) => {
   const userId = req.session.user_id;
@@ -172,7 +169,7 @@ app.post("/urls/:id/edit", (req, res) => {
   // Update the long URL with the value from the form submission
   url.longURL = req.body.longURL;
 
-  res.redirect("/urls");
+  res.redirect(`/urls/${shortURL}`);
 });
 
 // Display the registration page
@@ -212,11 +209,6 @@ app.post("/register", (req, res) => {
 
   req.session.user_id = userId;
   res.redirect("/urls");
-});
-
-app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
 });
 
 // Handle the login form submission
